@@ -87,6 +87,11 @@ DATABASES = {
     }
 }
 
+if os.environ.get("ENVIRONMENT", "LOCAL") == "PRODUCTION":
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    ALLOWED_HOSTS = ['kalibre-ebook-convert-c8fa6197ec20.herokuapp.com', 'localhost', '127.0.0.1']
+
 
 
 # Password validation
