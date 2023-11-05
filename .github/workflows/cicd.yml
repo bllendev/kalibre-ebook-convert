@@ -15,13 +15,14 @@ jobs:
     env:
       DJANGO_SETTINGS_MODULE: ebook_convert.settings
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      db:
-        image: postgres:12-alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    db:
+      image: postgres:12-alpine
+      env:
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - 5432:5432
+      options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v2
