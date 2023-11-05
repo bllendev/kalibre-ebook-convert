@@ -3,12 +3,18 @@ name: CI/CD
 on:
   push:
     branches:
-      - main
+      - "*"
   pull_request:
     branches:
-      - main
+      - "*"
 
-    services:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: kalibre-ebook-convert
+    env:
+      DJANGO_SETTINGS_MODULE: ebook_convert.settings
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
       db:
         image: postgres:12-alpine
         env:
