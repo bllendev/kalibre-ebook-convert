@@ -7,6 +7,6 @@ build:
 release:
   image: web
   command:
-    - python manage.py collectstatic --noinput
+    - python manage.py migrate
 run:
   web: gunicorn ebook_convert.wsgi
