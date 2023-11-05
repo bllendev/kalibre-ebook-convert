@@ -19,6 +19,7 @@ COPY requirements.txt /app/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install psycopg2-binary psycopg2
 
 # Copy the current directory (where your Django project is) into the container
 COPY . /app/

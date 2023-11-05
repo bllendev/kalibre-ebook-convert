@@ -1,5 +1,4 @@
 django>=3.2,<4
 django-ninja
 gunicorn
-psycopg2-binary
 dj_database_url
