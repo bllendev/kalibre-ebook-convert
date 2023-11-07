@@ -1,9 +1,11 @@
 # test_convert.py
-import unittest
+from django.test import TestCase, Client
+from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 from api.convert import convert_with_pandoc
 
-class TestConvertWithPandoc(unittest.TestCase):
+
+class TestConvertWithPandoc(TestCase):
 
     def setUp(self):
         # Create a dummy input file for testing
@@ -23,7 +25,32 @@ class TestConvertWithPandoc(unittest.TestCase):
         self.assertTrue(os.path.exists(output_path))
         self.assertIn("File converted successfully", message)
 
-    # More tests can be added, like checking invalid input, unsupported formats, etc.
 
-if __name__ == '__main__':
-    unittest.main()
+class ConvertEndpointTest(TestCase):
+
+    def setUp(self):
+        # Initialize the test client
+        self.client = Client()
+
+    def test_convert_file(self):
+        test_file_content = b'This is a test content.'
+        test_file_name = 'test_file.txt'
+        
+        # Create an instance of SimpleUploadedFile with test content
+        test_file = SimpleUploadedFile(
+            name=test_file_name,
+            content=test_file_content,
+            content_type='text/plain'
+        )
+
+        # Make a POST request to the endpoint with the file
+        response = self.client.post('/api/convert/?output_format=pdf', {'input_file': test_file})
+
+        # Check that the response is 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the Content-Type header is 'application/pdf' (or the expected type)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+
+        # Check that the Content-Disposition header is set to attachment
+        self.assertTrue('attachment' in response['Content-Disposition'])

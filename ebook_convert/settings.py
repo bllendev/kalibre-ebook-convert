@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'ninja',
     'api',
 ]
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'ebook_convert.urls'
@@ -87,11 +89,13 @@ DATABASES = {
     }
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 if os.environ.get("ENVIRONMENT", "LOCAL") == "PRODUCTION":
     import dj_database_url
     DATABASES['default'] = dj_database_url.config(default=os.environ.get('DATABASE_URL'))
     ALLOWED_HOSTS = ['kalibre-ebook-convert-c8fa6197ec20.herokuapp.com', 'localhost', '127.0.0.1']
-
+    CORS_ALLOW_ALL_ORIGINS = False
 
 
 # Password validation

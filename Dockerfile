@@ -5,6 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    texlive \
     pandoc \
     libpq-dev \
     build-essential \
