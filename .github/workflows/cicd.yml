@@ -17,6 +17,7 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
+      DB_HOST: 127.0.0.1
       POSTGRES_PASSWORD: password
 
     services:
@@ -26,6 +27,7 @@ jobs:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
+          DB_HOST: 127.0.0.1
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
