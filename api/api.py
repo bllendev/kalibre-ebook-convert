@@ -68,5 +68,5 @@ def convert_file(request, input_file: UploadedFile, output_format: str):
             response['Content-Disposition'] = f'attachment; filename="{os.path.basename(output_path)}"'
             return response
         except Exception as e:
-            logger.error(f"error: couldn't open file !: {output_path}")
+            logger.error(f"error: couldn't open file !: {output_path} - {e}")
             return HttpResponse(f"Error serving the converted file: {e}", status=500)
