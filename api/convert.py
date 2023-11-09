@@ -3,6 +3,9 @@ from django.conf import settings
 import os
 import subprocess
 
+import logging
+logger = logging.getLogger(__name__)
+
 def convert_with_pandoc(input_path, output_format):
     """
     Convert a file using pandoc.
@@ -22,4 +25,5 @@ def convert_with_pandoc(input_path, output_format):
         subprocess.run(['pandoc', input_path, '-o', output_path], check=True, capture_output=True)
         return (output_path, f"File converted successfully. Saved to {output_path}.")
     except subprocess.CalledProcessError as e:
+        logger.error(f"convert_with_pandoc error! {e} | output_path: {output_path}")
         return (None, f"Error during conversion: {e}")

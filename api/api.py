@@ -1,7 +1,8 @@
 import os
 from ninja import NinjaAPI, File
 from ninja.files import UploadedFile
-from ninja.security import HttpBearer
+from ninja.security import APIKeyHeader
+
 from api.convert import convert_with_pandoc
 from django.core.exceptions import PermissionDenied
 from django.http import FileResponse, HttpResponse
@@ -9,16 +10,32 @@ from ninja.errors import ValidationError
 
 from django.conf import settings
 
-api = NinjaAPI()
+import logging
+logger = logging.getLogger(__name__)
 
-# class TokenAuth(HttpBearer):
-#     def authenticate(self, request, token: str):
-#         print(f"request: {request}")
-#         print(f"token: {token}")
-#         if not settings.DEBUG or settings.ENVIRONMENT == "PRODUCTION":
-#             if token != os.environ.get("KALIBRE_PRIVADO"):
-#                 raise PermissionDenied("Invalid token")
-#         return token
+class InvalidToken(Exception):
+    pass
+
+class ApiKey(APIKeyHeader):
+    param_name = "X-API-Key"
+
+    def authenticate(self, request, key):
+        if key == os.getenv("KALIBRE_PRIVADO"):
+            return key
+        logger.error(f"error: bad authenticate: {request}")
+        raise InvalidToken
+
+
+header_key = ApiKey()
+api = NinjaAPI(auth=header_key)
+
+# ---------------- #
+# -- Exceptions -- #
+# ---------------- #
+@api.exception_handler(InvalidToken)
+def on_invalid_token(request, exc):
+    return api.create_response(request, {"detail": "Invalid token supplied"}, status=401)
+
 
 @api.exception_handler(ValidationError)
 def custom_validation_errors(request, exc):
@@ -51,5 +68,5 @@ def convert_file(request, input_file: UploadedFile, output_format: str):
             response['Content-Disposition'] = f'attachment; filename="{os.path.basename(output_path)}"'
             return response
         except Exception as e:
-            # Handle error if the file can't be opened
+            logger.error(f"error: couldn't open file !: {output_path}")
             return HttpResponse(f"Error serving the converted file: {e}", status=500)

@@ -31,6 +31,8 @@ class ConvertEndpointTest(TestCase):
     def setUp(self):
         # Initialize the test client
         self.client = Client()
+        # Set up the API key value (this should be the value you expect in the tests)
+        self.api_key = os.getenv("KALIBRE_PRIVADO")
 
     def test_convert_file(self):
         test_file_content = b'This is a test content.'
@@ -43,15 +45,15 @@ class ConvertEndpointTest(TestCase):
             content_type='text/plain'
         )
 
-        # Make a POST request to the endpoint with the file
-        response = self.client.post('/api/convert/?output_format=pdf', {'input_file': test_file})
+        # Make a POST request to the endpoint with the file and the API key in the header
+        response = self.client.post(
+            '/api/convert/?output_format=pdf', 
+            {'input_file': test_file},
+            HTTP_X_API_KEY=self.api_key
+        )
 
         # Check that the response is 200 OK
         self.assertEqual(response.status_code, 200)
 
-        # TODO: add logging and be have it work as intended in cicd
-        # # Check that the Content-Type header is 'application/pdf' (or the expected type)
-        # self.assertEqual(response['Content-Type'], 'application/pdf', response)
-
-        # # Check that the Content-Disposition header is set to attachment
-        # self.assertTrue('attachment' in response['Content-Disposition'])
+        # TODO: add logging and have it work as intended in CI/CD
+        # Other checks for response content can be added here
