@@ -50,7 +50,7 @@ class ConvertEndpointTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the Content-Type header is 'application/pdf' (or the expected type)
-        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertEqual(response['Content-Type'], 'application/pdf', response)
 
         # Check that the Content-Disposition header is set to attachment
         self.assertTrue('attachment' in response['Content-Disposition'])
