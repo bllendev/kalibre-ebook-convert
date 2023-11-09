@@ -19,6 +19,7 @@ jobs:
       POSTGRES_USER: postgres
       DB_HOST: 127.0.0.1
       POSTGRES_PASSWORD: password
+      KALIBRE_PRIVADO: ${{ secrets.KALIBRE_PRIVADO }}
 
     services:
       db:
