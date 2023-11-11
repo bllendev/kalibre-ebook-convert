@@ -20,7 +20,7 @@ class ApiKey(APIKeyHeader):
     param_name = "X-API-Key"
 
     def authenticate(self, request, key):
-        if key == os.getenv("KALIBRE_PRIVADO"):
+        if key in str(os.getenv("KALIBRE_PRIVADO")):
             return key
         logger.error(f"error: bad authenticate: {request}")
         raise InvalidToken
@@ -34,7 +34,7 @@ api = NinjaAPI(auth=header_key)
 # ---------------- #
 @api.exception_handler(InvalidToken)
 def on_invalid_token(request, exc):
-    return api.create_response(request, {"detail": "Invalid token supplied"}, status=401)
+    return api.create_response(request, {"detail": "Invalid token supplied - should be {os.getenv('KALIBRE_PRIVADO')}"}, status=401)
 
 
 @api.exception_handler(ValidationError)
