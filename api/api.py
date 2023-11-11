@@ -34,7 +34,7 @@ api = NinjaAPI(auth=header_key)
 # ---------------- #
 @api.exception_handler(InvalidToken)
 def on_invalid_token(request, exc):
-    return api.create_response(request, {"detail": f"Invalid token supplied - should be {os.getenv('KALIBRE_PRIVADO')}"}, status=401)
+    return api.create_response(request, {"detail": "Invalid token supplied"}, status=401)
 
 
 @api.exception_handler(ValidationError)
