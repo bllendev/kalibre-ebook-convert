@@ -3,3 +3,4 @@ django-ninja
 gunicorn
 dj_database_url
 django-cors-headers
+whitenoise
